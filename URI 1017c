@@ -1,0 +1,10 @@
+#include<stdio.h>
+int main()
+{
+    double ti, ki, kl = 12, x;
+    scanf("%lf%lf",&ti, &ki);
+    x = ((ti * ki) /kl) ;
+    printf("%.3lf\n", x);
+    return 0;
+
+}
