@@ -1,0 +1,54 @@
+#include<stdio.h>
+int main()
+{
+    double a, b, c,s,p,q;
+    scanf("%lf %lf %lf", &a, &b, &c);
+    if(a>b && a>c)
+    {
+        s=a;
+        p=b;
+        q=c;
+
+    }
+    if(b>a && b>c)
+    {
+        s=b;
+        p=a;
+        q=c;
+
+    }
+    else
+    {
+        s=c;
+        p=a;
+        q=b;
+
+    }
+    if(s>=p+q)
+    {
+        printf("NAO FORMA TRIANGULO\n");
+    }
+    else if(s*s==p*p+q*q)
+    {
+        printf("TRIANGULO RETANGULO\n");
+    }
+    else if(s*s > p*p + q*q)
+    {
+        printf("TRIANGULO OBTUSANGULO\n");
+    }
+    else if(s*s < p*p + q*q)
+    {
+        printf("TRIANGULO ACUTANGULO\n");
+    }
+
+     if(a==b && b==c)
+    {
+        printf("TRIANGULO EQUILATERO\n");
+    }
+    if((a==b && a!=c) || (a==c && a!=b) || (b==c && b!=a))
+    {
+        printf("TRIANGULO ISOSCELES\n");
+    }
+
+    return 0;
+}
