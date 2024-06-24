@@ -1,0 +1,93 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+
+string input;
+size_t index = 0;
+bool error = false;
+
+
+void S();
+void A();
+void B();
+void C();
+
+void match(char expected) {
+    if (input[index] == expected) {
+        index++;
+    } else {
+        error = true;
+    }
+}
+
+void S() {
+    A();
+}
+
+void A() {
+    if (input[index] == 'a') {
+        B();
+        match('b');
+    } else if (input[index] == 'c') {
+        C();
+        match('d');
+    } else {
+        error = true;
+    }
+}
+
+void B() {
+    if (input[index] == 'a') {
+        match('a');
+        B();  
+    } else if (input[index] == '@' || input[index] == 'b' || input[index] == 'c' || input[index] == 'd') {
+        
+    } else {
+        error = true;
+    }
+}
+
+void C() {
+    if (input[index] == 'c') {
+        match('c');
+        C();  
+    } else if (input[index] == '@' || input[index] == 'd') {
+        
+    } else {
+        error = true;
+    }
+}
+
+bool predictiveParser(string inp) {
+    input = inp;
+    index = 0;
+    error = false;
+
+    S();  
+
+    
+    if (input[index] == '$' && !error) {
+        return true;  
+    } else {
+        return false; 
+    }
+}
+
+int main() {
+    string input;
+    cout << "Enter input string (end with $ symbol): ";
+    cin >> input;
+
+    
+    input += '$';
+
+    if (predictiveParser(input)) {
+        cout << "Parsing successful! Input string belongs to the grammar.\n";
+    } else {
+        cout << "Parsing error! Input string does not belong to the grammar.\n";
+    }
+
+    return 0;
+}
