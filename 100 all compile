@@ -355,6 +355,102 @@ FOLLOW(F) = * + $ )
 
 */
 
+9:-
+#include <iostream>
+#include <string>
+#include <stack>
+
+using namespace std;
+
+// Parsing table represented as a 2D array
+string parsingTable[5][4] = {
+    {"TH", "", "", ""},
+    {"FU", "", "", ""},
+    {"i", "", "", ""},
+    {"", "*FU", "ε", "ε"},
+    {"", "", "+TH", "ε"}
+};
+
+// Helper function to get index of non-terminal in the parsing table
+int nonTerminalIndex(char nt) {
+    switch (nt) {
+        case 'E': return 0;
+        case 'T': return 1;
+        case 'F': return 2;
+        case 'U': return 3;
+        case 'H': return 4;
+        default: return -1;
+    }
+}
+
+// LL(1) parser function
+bool ll1Parser(string input) {
+    // Initialize stack and pointers
+    stack<char> stk;
+    stk.push('$');
+    stk.push('E'); // Starting non-terminal
+    
+    int idx = 0;
+    char X = stk.top();
+    char a = input[idx];
+    
+    while (X != '$') {
+        if (X == a) {
+            stk.pop();
+            idx++;
+            X = stk.top();
+            a = input[idx];
+        } else if (!isupper(X)) {
+            return false; // X is a terminal and does not match a
+        } else {
+            int row = nonTerminalIndex(X);
+            int col = 0;
+            if (a == 'i') col = 0;
+            else if (a == '*') col = 1;
+            else if (a == '+') col = 2;
+            else if (a == '$') col = 3;
+            else return false; // Invalid input symbol
+            
+            string production = parsingTable[row][col];
+            if (production == "") {
+                return false; // No production in table
+            } else {
+                stk.pop(); // Pop X
+                if (production != "ε") {
+                    // Push production in reverse order to stack
+                    for (int i = production.length() - 1; i >= 0; i--) {
+                        stk.push(production[i]);
+                    }
+                }
+            }
+        }
+        X = stk.top();
+    }
+    
+    if (X == '$' && a == '$') {
+        return true; // Input successfully parsed
+    } else {
+        return false; // Input not parsed completely
+    }
+}
+
+int main() {
+    string input;
+    cout << "Enter input string: ";
+    cin >> input;
+    
+    // Append $ to end of input string
+    input += '$';
+    
+    if (ll1Parser(input)) {
+        cout << "Input string is accepted by the LL(1) grammar." << endl;
+    } else {
+        cout << "Input string is not accepted by the LL(1) grammar." << endl;
+    }
+    
+    return 0;
+}
+
 Result
 
 FIRST(E) = i (
