@@ -1,0 +1,183 @@
+6-:
+#include <bits/stdc++.h>
+using namespace std;
+
+
+
+int main()
+{
+
+    int i=0,j=0;
+
+    cout<<"Expression terminated by '$'."<<endl;
+    cout<<"Type expression: ";
+
+    char a[10],b[10],c;
+    void *p,*add[10];
+
+    while((c=getchar())!='$')
+    {
+        a[i]=c;
+        i++;
+    }
+    int n=i-1;
+
+    cout<<"Given expression is: ";
+    i=0;
+    while(i<=n)
+    {
+        cout<<a[i];
+        i++;
+    }
+    cout<<endl;
+    cout<<"      Symbol Table"<<endl;
+    cout<<"Symbol    "<<"Addr    "<<"Type    "<<endl;
+    i=0;
+
+    while(i<=n)
+    {
+        c=a[i];
+        if(isalpha(c))
+        {
+
+            p=malloc(c);
+            add[j]=p;
+            b[j]=c;
+            cout<<c<<"    "<<p<<"    identifier"<<endl;
+            j++;
+        }
+        i++;
+    }
+    cout<<"Enter symbol for searching: ";
+    char ch;
+    cin>>ch;
+    bool f=0;
+    for(int i=0; i<j; i++)
+    {
+        if(ch==b[i])
+        {
+            cout<<"  Symbol found!"<<endl;
+            cout<<ch<<"    "<<"@address:"<<add[i]<<endl;
+            f=1;
+            break;
+        }
+    }
+    if(f==0)
+        cout<<"  Symbol not found!"<<endl;
+}
+
+7:-
+#include<bits/stdc++.h>
+#define ll long long
+using namespace std;
+
+//We are considering & as epsolone
+
+map<char, vector<string> > production;
+vector<char> prod;
+ll num;
+char starting;
+
+set<char> first(char x)
+{
+    set<char> result;
+
+
+    for(auto c : production[x])
+    {
+        for(int i = 0; i < c.size();)
+        {
+            if(!isupper(c[i]))
+            {
+                result.insert(c[i]);
+                break;
+            }
+            else
+            {
+                set<char> st = first(c[i]);
+                ll eps = 0;
+
+                for(auto f : st)
+                {
+                    if(f != '&') result.insert(f);
+                    else if(f == '&' && i + 1 == c.size()) result.insert(f);
+                    else
+                    {
+                        eps = 1;
+                    }
+                }
+                if(eps) i++;
+                else break;
+            }
+        }
+    }
+    return result;
+}
+
+int main()
+{
+    cout << "Enter number of Production: ";
+    cin >> num;
+
+
+    set<char> term;
+    ll sz = 0;
+
+    for(int i = 0; i < num; i++)
+    {
+        string s;
+        cin >> s;
+
+        string left;
+
+        for(int j = 2; j < s.size(); j++)
+        {
+            left += s[j];
+        }
+
+        production[s[0]].push_back(left);
+        term.insert(s[0]);
+
+        if(term.size() != sz)
+        {
+            prod.push_back(s[0]);
+        }
+        sz = term.size();
+    }
+
+
+    cout << endl;
+
+    for(auto x : prod)
+    {
+        set<char> ans = first(x);
+        cout << "first(" << x << ") = ";
+        for(auto x : ans) cout << x << " ";
+        cout << endl;
+    }
+
+}
+/*
+Input
+8
+E=TB
+B=+TB
+B=&
+T=FC
+C=*FC
+C=&
+F=i
+F=(E)
+
+Result
+
+FIRST(E) = i (
+
+FIRST(B) = + &
+
+FIRST(T) = i (
+
+FIRST(C) = * &
+
+FIRST(F) = i (
+*/
